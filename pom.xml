@@ -17,7 +17,7 @@
     <dependency>
       <groupId>org.telegram</groupId>
       <artifactId>telegrambots</artifactId>
-      <version>6.9.7</version>
+      <version>6.7.0</version>
     </dependency>
 
     <dependency>
@@ -30,6 +30,7 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
       <version>3.2.5</version>
+      <optional>true</optional>
     </dependency>
   </dependencies>
 </project>
