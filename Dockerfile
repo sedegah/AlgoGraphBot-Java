@@ -1,11 +1,11 @@
-FROM openjdk:17-jdk-slim
+# Use Eclipse Temurin JDK base image
+FROM eclipse-temurin:17-jdk-alpine
 
+# Set working directory
 WORKDIR /app
 
-COPY pom.xml ./
-COPY src ./src
+# Copy the compiled jar (update to correct name)
+COPY target/AlgoGraphBot-1.0.jar bot.jar
 
-RUN apt-get update && apt-get install -y maven && \
-    mvn clean package
-
-CMD ["java", "-jar", "target/algobot-1.0.jar"]
+# Run the bot
+CMD ["java", "-jar", "bot.jar"]
