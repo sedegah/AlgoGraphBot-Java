@@ -1,11 +1,19 @@
-# Use a base image with Java 17
-FROM eclipse-temurin:17-jdk
-
-# Set working directory inside container
+# ===== Stage 1: Build =====
+FROM maven:3.8.6-eclipse-temurin-17 AS builder
 WORKDIR /app
 
-# Copy the compiled JAR from the build context
-COPY target/algobot-1.0.jar app.jar
+# Copy your source code
+COPY . .
 
-# Set the entrypoint to run your bot
+# Build the app
+RUN mvn clean package -DskipTests
+
+# ===== Stage 2: Run =====
+FROM eclipse-temurin:17-jdk
+WORKDIR /app
+
+# Copy the compiled JAR from the builder stage
+COPY --from=builder /app/target/*.jar app.jar
+
+# Run the bot
 ENTRYPOINT ["java", "-jar", "app.jar"]
