@@ -1,78 +1,73 @@
 package com.algograph;
 
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class AlgoSelector {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-    public static String handleTelegramSort(String msg) {
-        // Example: /sort quick 4 2 5 1 3
-        String[] parts = msg.split("\\s+");
-        if (parts.length < 3) return " Usage: /sort <algorithm> <space-separated array>";
+        System.out.println("Welcome to the Algorithm Selector!");
+        System.out.println("Do you want to use a SEARCHING or SORTING algorithm?");
+        String choice = scanner.nextLine().trim().toLowerCase();
 
-        String algo = parts[1].toLowerCase();
-        int[] arr = Arrays.stream(Arrays.copyOfRange(parts, 2, parts.length)).mapToInt(Integer::parseInt).toArray();
-
-        StringBuilder steps = new StringBuilder();
-        switch (algo) {
-            case "bubble" -> {
-                steps.append(Sorting.getBubbleSortDefinition()).append("\n\n");
-                Sorting.bubbleSort(arr, steps);
-            }
-            case "selection" -> {
-                steps.append(Sorting.getSelectionSortDefinition()).append("\n\n");
-                Sorting.selectionSort(arr, steps);
-            }
-            case "insertion" -> {
-                steps.append(Sorting.getInsertionSortDefinition()).append("\n\n");
-                Sorting.insertionSort(arr, steps);
-            }
-            case "merge" -> {
-                steps.append(Sorting.getMergeSortDefinition()).append("\n\n");
-                Sorting.mergeSort(arr, 0, arr.length - 1, steps);
-            }
-            case "quick" -> {
-                steps.append(Sorting.getQuickSortDefinition()).append("\n\n");
-                Sorting.quickSort(arr, 0, arr.length - 1, steps);
-            }
-            default -> steps.append(" Invalid sorting algorithm.");
-        }
-        steps.append("\n Sorted: ").append(Arrays.toString(arr));
-        return steps.toString();
-    }
-
-    public static String handleTelegramSearch(String msg) {
-        // Example: /search binary 4 2 5 1 3 5
-        String[] parts = msg.split("\\s+");
-        if (parts.length < 4) return " Usage: /search <linear|binary> <space-separated array> <target>";
-
-        String algo = parts[1].toLowerCase();
-        int[] arr = Arrays.stream(Arrays.copyOfRange(parts, 2, parts.length - 1)).mapToInt(Integer::parseInt).toArray();
-        int target = Integer.parseInt(parts[parts.length - 1]);
-
-        StringBuilder steps = new StringBuilder();
-        int result;
-
-        switch (algo) {
-            case "linear" -> {
-                steps.append(Searching.getLinearSearchDefinition()).append("\n\n");
-                result = Searching.linearSearch(arr, target, steps);
-            }
-            case "binary" -> {
-                Arrays.sort(arr);  // binary search requires sorted
-                steps.append(Searching.getBinarySearchDefinition()).append("\n\n");
-                result = Searching.binarySearch(arr, target, steps);
-            }
-            default -> {
-                return " Invalid searching algorithm.";
-            }
+        System.out.println("Enter the number of elements in your array:");
+        int n = scanner.nextInt();
+        int[] array = new int[n];
+        System.out.println("Enter the elements of the array:");
+        for (int i = 0; i < n; i++) {
+            array[i] = scanner.nextInt();
         }
 
-        if (result == -1) {
-            steps.append("\n Value not found.");
+        if (choice.equals("searching")) {
+            System.out.println("Select a searching algorithm:\n1. Linear Search\n2. Binary Search");
+            int algoChoice = scanner.nextInt();
+            System.out.println("Enter the value to search for:");
+            int target = scanner.nextInt();
+
+            if (algoChoice == 1) {
+                System.out.println("\nDefinition: Linear Search checks each element sequentially.");
+                int index = Searching.linearSearch(array, target);
+                System.out.println("Result: Element " + target + (index == -1 ? " not found." : " found at index " + index));
+            } else if (algoChoice == 2) {
+                Arrays.sort(array);
+                System.out.println("\nDefinition: Binary Search splits the array and searches efficiently.");
+                int index = Searching.binarySearch(array, target);
+                System.out.println("Result: Element " + target + (index == -1 ? " not found." : " found at index " + index));
+            }
+        } else if (choice.equals("sorting")) {
+            System.out.println("Select a sorting algorithm:\n1. Bubble\n2. Selection\n3. Insertion\n4. Merge\n5. Quick");
+            int algoChoice = scanner.nextInt();
+
+            System.out.println("\nOriginal Array: " + Arrays.toString(array));
+            switch (algoChoice) {
+                case 1 -> {
+                    System.out.println("Definition: Bubble Sort swaps adjacent elements.");
+                    Sorting.bubbleSort(array);
+                }
+                case 2 -> {
+                    System.out.println("Definition: Selection Sort selects min element each pass.");
+                    Sorting.selectionSort(array);
+                }
+                case 3 -> {
+                    System.out.println("Definition: Insertion Sort builds sorted list incrementally.");
+                    Sorting.insertionSort(array);
+                }
+                case 4 -> {
+                    System.out.println("Definition: Merge Sort divides and merges.");
+                    Sorting.mergeSort(array, 0, array.length - 1);
+                }
+                case 5 -> {
+                    System.out.println("Definition: Quick Sort partitions and recurses.");
+                    Sorting.quickSort(array, 0, array.length - 1);
+                }
+                default -> System.out.println("Invalid option.");
+            }
+            System.out.println("Sorted Array: " + Arrays.toString(array));
         } else {
-            steps.append("\n Found at index: ").append(result);
+            System.out.println("Invalid choice. Please enter either 'searching' or 'sorting'.");
         }
 
-        return steps.toString();
+        scanner.close();
     }
 }
