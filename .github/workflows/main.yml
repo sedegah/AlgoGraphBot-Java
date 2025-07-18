@@ -1,0 +1,26 @@
+name: Run Telegram Bot Every 10 Minutes
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'  # Every 10 minutes
+  workflow_dispatch:        # Manual run button
+
+jobs:
+  build-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build with Maven
+        run: mvn clean install
+
+      - name: Run Bot
+        run: java -jar target/AlgoGraphBot-Java-1.0-SNAPSHOT.jar
